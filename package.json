@@ -1,0 +1,32 @@
+{
+  "name": "asl-metrics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config index.js",
+    "test": "npm run test:lint",
+    "test:lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-metrics.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-metrics/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
+  "dependencies": {
+    "@asl/schema": "^7.45.4",
+    "@asl/service": "^7.21.0",
+    "@ukhomeoffice/taskflow": "^2.1.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "eslint": "^7.2.0",
+    "eslint-config-lennym": "^2.1.2",
+    "nodemon": "^2.0.4"
+  }
+}
