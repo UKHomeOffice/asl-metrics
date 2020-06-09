@@ -19,9 +19,12 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
+    "@asl/constants": "^0.7.1",
     "@asl/schema": "^7.45.4",
     "@asl/service": "^7.21.0",
-    "@ukhomeoffice/taskflow": "^2.1.0"
+    "knex": "^0.21.1",
+    "lodash": "^4.17.15",
+    "through2": "^3.0.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
