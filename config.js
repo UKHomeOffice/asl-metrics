@@ -1,14 +1,15 @@
 module.exports = {
   port: process.env.PORT || 8080,
   verboseErrors: process.env.VERBOSE_ERRORS === 'true',
-  taskflowDB: {
+  flowUrl: process.env.FLOW_URL,
+  workflowdb: {
     database: process.env.DATABASE_NAME || 'taskflow',
     host: process.env.DATABASE_HOST,
     password: process.env.DATABASE_PASSWORD || 'test-password',
     port: process.env.DATABASE_PORT,
     user: process.env.DATABASE_USERNAME
   },
-  db: {
+  asldb: {
     database: process.env.ASL_DATABASE_NAME || 'asl',
     host: process.env.ASL_DATABASE_HOST,
     password: process.env.ASL_DATABASE_PASSWORD || 'test-password',
