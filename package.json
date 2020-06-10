@@ -24,6 +24,7 @@
     "@asl/service": "^7.21.0",
     "knex": "^0.21.1",
     "lodash": "^4.17.15",
+    "moment-business-time": "^1.0.0",
     "through2": "^3.0.1"
   },
   "devDependencies": {

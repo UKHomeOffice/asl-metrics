@@ -1,6 +1,7 @@
 module.exports = {
   port: process.env.PORT || 8080,
   verboseErrors: process.env.VERBOSE_ERRORS === 'true',
+  flowUrl: process.env.FLOW_URL,
   workflowdb: {
     database: process.env.DATABASE_NAME || 'taskflow',
     host: process.env.DATABASE_HOST,
