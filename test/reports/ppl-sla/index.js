@@ -9,8 +9,8 @@ const flow = require('./data/flow');
 describe('PPL SLA report', () => {
 
   beforeEach(() => {
-    // pretend it's March 25th
-    this.clock = sinon.useFakeTimers(moment('2020-03-25', 'YYYY-MM-DD').valueOf());
+    // pretend it's midday on March 25th
+    this.clock = sinon.useFakeTimers(moment('2020-03-25T12:00:00.000Z').valueOf());
 
     this.db = () => {
       return {
@@ -137,6 +137,32 @@ describe('PPL SLA report', () => {
           assert.equal(result.deadline, '2020-03-19T10:44:37.173Z');
           // shows false because the deadline had not been extended at the point of expiry
           assert.equal(result.extended, 'false');
+        });
+    });
+
+    it('should not flag if resolved on the same day as the deadline, but at a later time', () => {
+      const input = {
+        activity: require('./data/passed-same-day'),
+        data: {
+          id: uuid()
+        }
+      };
+      return report({ flow: flow(), db: this.db() }).parse(input)
+        .then(result => {
+          assert.deepEqual(result, []);
+        });
+    });
+
+    it('should not flag if open, but deadline expired earlier on the same day', () => {
+      const input = {
+        activity: require('./data/unresolved-same-day'),
+        data: {
+          id: uuid()
+        }
+      };
+      return report({ flow: flow(), db: this.db() }).parse(input)
+        .then(result => {
+          assert.deepEqual(result, []);
         });
     });
 
