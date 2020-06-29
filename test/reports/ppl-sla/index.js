@@ -166,6 +166,19 @@ describe('PPL SLA report', () => {
         });
     });
 
+    it('ignores deadlines that passed before `since` parameter if defined', () => {
+      const input = {
+        activity: require('./data/untouched-after-submission'),
+        data: {
+          id: uuid()
+        }
+      };
+      return report({ flow: flow(), db: this.db(), query: { since: '2020-03-20' } }).parse(input)
+        .then(result => {
+          assert.deepEqual(result, []);
+        });
+    });
+
   });
 
 });
