@@ -179,6 +179,19 @@ describe('PPL SLA report', () => {
         });
     });
 
+    it('takes bank holidays into account when calculating deadlines', () => {
+      const input = {
+        activity: require('./data/saved-by-bank-holiday'),
+        data: {
+          id: uuid()
+        }
+      };
+      return report({ flow: flow(), db: this.db(), query: { since: '2020-03-20' } }).parse(input)
+        .then(result => {
+          assert.deepEqual(result, []);
+        });
+    });
+
   });
 
 });
