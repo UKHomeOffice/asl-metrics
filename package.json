@@ -7,7 +7,9 @@
     "dev": "nodemon -r dotenv/config index.js",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
-    "test:unit": "mocha ./test --recursive"
+    "pretest:unit": "npm run migrate",
+    "test:unit": "mocha ./test --recursive",
+    "migrate": "DATABASE_NAME=asl-test NODE_ENV=test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +23,6 @@
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
     "@asl/constants": "^0.8.1",
-    "@asl/schema": "^9.7.4",
     "@asl/service": "^7.21.0",
     "express": "^4.17.1",
     "knex": "^0.21.1",
@@ -31,6 +32,7 @@
     "through2": "^3.0.1"
   },
   "devDependencies": {
+    "@asl/schema": "^9.8.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
