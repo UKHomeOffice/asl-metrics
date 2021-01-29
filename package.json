@@ -9,7 +9,9 @@
     "test:lint": "eslint .",
     "pretest:unit": "npm run migrate",
     "test:unit": "mocha ./test --recursive",
-    "migrate": "DATABASE_NAME=asl-test NODE_ENV=test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js"
+    "migrate": "npm run migrate:flow && npm run migrate:asl",
+    "migrate:asl": "NODE_ENV=test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js",
+    "migrate:flow": "node ./scripts/migrate.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@asl/schema": "^9.8.0",
+    "@ukhomeoffice/taskflow": "^2.2.2",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",

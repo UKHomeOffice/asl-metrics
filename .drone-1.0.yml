@@ -12,13 +12,26 @@ steps:
         from_secret: npm_auth_token
     commands:
       - npm ci
+  - name: database setup
+    image: postgres
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: test-password
+    commands:
+      - psql -c 'CREATE DATABASE "asl-test"'
+      - psql -c 'CREATE DATABASE "taskflow-test"'
   - name: test
     image: node:12
     environment:
       DATABASE_NAME: asl-test
       DATABASE_HOST: postgres
-      DATABASE_USERNAME: asl-test
+      DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: test-password
+      WORKFLOW_DATABASE_NAME: taskflow-test
+      WORKFLOW_DATABASE_HOST: postgres
+      WORKFLOW_DATABASE_USERNAME: postgres
+      WORKFLOW_DATABASE_PASSWORD: test-password
       NPM_AUTH_USERNAME:
         from_secret: npm_auth_username
       NPM_AUTH_TOKEN:
@@ -85,5 +98,5 @@ services:
 - name: postgres
   image: postgres
   environment:
-    POSTGRES_USER: asl-test
+    POSTGRES_USER: postgres
     POSTGRES_PASSWORD: test-password

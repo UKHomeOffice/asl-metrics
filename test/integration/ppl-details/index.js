@@ -72,6 +72,7 @@ describe('PPL Details Report', () => {
     const { query, parse } = report({ db: this.db });
     return query()
       .then(result => result.map(parse))
+      .then(result => Promise.all(result))
       .then(result => {
         assert.equal(result.length, 1);
         assert.equal(result[0].licence_number, 'P1234');
@@ -82,6 +83,7 @@ describe('PPL Details Report', () => {
     const { query, parse } = report({ db: this.db });
     return query()
       .then(result => result.map(parse))
+      .then(result => Promise.all(result))
       .then(result => {
         assert.equal(result[0].protocol_count, '2');
         assert.equal(result[0].highest_severity, 'severe');
