@@ -7,7 +7,6 @@ const db = {
   host: process.env.WORKFLOW_DATABASE_HOST || 'localhost',
   password: process.env.WORKFLOW_DATABASE_PASSWORD || 'test-password'
 };
-console.log(db);
 Promise.resolve()
   .then(() => {
     console.log('migrate taskflow test db');
