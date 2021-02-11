@@ -92,6 +92,7 @@ describe('PPL Applications Report', () => {
           title: 'Active Project',
           status: 'active',
           licence_number: 'P1234',
+          issue_date: '2020-01-26T12:00:00.000',
           created_at: '2020-01-01T12:00:00.000'
         },
         {
