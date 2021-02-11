@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { v4: uuid } = require('uuid');
+const { flatten } = require('lodash');
 
 const db = require('../helpers/db');
 const flow = require('../helpers/flow');
@@ -7,7 +8,9 @@ const report = require('../../../lib/reports/ppl-applications');
 
 const ids = {
   task: uuid(),
-  active: uuid()
+  issueDateTask: uuid(),
+  active: uuid(),
+  issueDate: uuid()
 };
 
 describe('PPL Applications Report', () => {
@@ -19,20 +22,41 @@ describe('PPL Applications Report', () => {
 
   before(() => {
     return Promise.resolve()
-      .then(() => this.db.flow('cases').insert({
-        id: ids.task,
-        status: 'resolved',
-        data: {
-          model: 'project',
-          action: 'grant',
-          id: ids.active,
-          modelData: {
-            status: 'inactive'
-          }
+      .then(() => this.db.flow('cases').insert([
+        {
+          id: ids.task,
+          status: 'resolved',
+          data: {
+            model: 'project',
+            action: 'grant',
+            id: ids.active,
+            modelData: {
+              status: 'inactive'
+            }
+          },
+          created_at: '2020-01-11T12:00:00.000'
         },
-        created_at: '2020-01-11T12:00:00.000'
-      }))
+        {
+          id: ids.issueDateTask,
+          status: 'resolved',
+          data: {
+            model: 'project',
+            action: 'grant',
+            id: ids.issueDate,
+            modelData: {
+              status: 'inactive'
+            }
+          },
+          created_at: '2020-01-12T12:00:00.000'
+        }
+      ]))
       .then(() => this.db.flow('activity_log').insert([
+        {
+          case_id: ids.issueDateTask,
+          event_name: 'status:new:awaiting-endorsement',
+          event: {},
+          created_at: '2020-01-12T12:00:00.000'
+        },
         {
           case_id: ids.task,
           event_name: 'status:new:awaiting-endorsement',
@@ -69,6 +93,15 @@ describe('PPL Applications Report', () => {
           status: 'active',
           licence_number: 'P1234',
           created_at: '2020-01-01T12:00:00.000'
+        },
+        {
+          id: ids.issueDate,
+          establishment_id: 100,
+          title: 'Changed issue date',
+          status: 'active',
+          licence_number: 'P1111',
+          issue_date: '2018-01-01T12:00:00.000',
+          created_at: '2020-01-01T12:00:00.000'
         }
       ]))
       .then(() => this.db.asl('project_versions').insert([
@@ -92,6 +125,7 @@ describe('PPL Applications Report', () => {
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
+      .then(result => flatten(result))
       .then(result => {
         assert.equal(result.length, 1);
       });
@@ -102,6 +136,7 @@ describe('PPL Applications Report', () => {
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
+      .then(result => flatten(result))
       .then(result => {
         assert.equal(result[0].totalTime, 25);
         assert.equal(result[0].timeDraftingPreSubmission, 10);
@@ -110,6 +145,17 @@ describe('PPL Applications Report', () => {
         assert.equal(result[0].timeWithLicensing, 5);
         assert.equal(result[0].timeWithASRU, 10);
         assert.equal(result[0].timeWithASRUPercentage, '40%');
+      });
+  });
+
+  it('ignores projects with issue dates pre-aspel', () => {
+    const { query, parse } = report({ db: this.db, flow });
+    return query()
+      .then(result => result.map(parse))
+      .then(result => Promise.all(result))
+      .then(result => flatten(result))
+      .then(result => {
+        assert.ok(result.every(row => row.title !== 'Changed issue date'));
       });
   });
 
