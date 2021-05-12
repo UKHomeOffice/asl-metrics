@@ -25,7 +25,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
     "@asl/constants": "^0.8.1",
-    "@asl/service": "^7.21.0",
+    "@asl/service": "^8.8.4",
     "express": "^4.17.1",
     "knex": "^0.21.1",
     "lodash": "^4.17.21",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@asl/schema": "^10.0.3",
-    "@ukhomeoffice/taskflow": "^2.2.2",
+    "@ukhomeoffice/taskflow": "^2.3.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
