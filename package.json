@@ -31,12 +31,12 @@
     "lodash": "^4.17.21",
     "moment": "^2.26.0",
     "moment-business-time": "^1.0.0",
-    "pg": "^8.5.1",
+    "pg": "^8.6.0",
     "through2": "^3.0.1"
   },
   "devDependencies": {
-    "@asl/schema": "^10.0.3",
-    "@ukhomeoffice/taskflow": "^2.3.0",
+    "@asl/schema": "^10.3.0",
+    "@ukhomeoffice/taskflow": "^2.5.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
