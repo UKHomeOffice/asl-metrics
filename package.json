@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
-    "@asl/constants": "^0.8.1",
+    "@asl/constants": "^1.1.0",
     "@asl/service": "^8.8.4",
     "express": "^4.17.1",
     "knex": "^0.21.1",
