@@ -18,7 +18,22 @@ module.exports = () => {
   const asl = Knex({ client: 'pg', connection: aslSettings });
   const flow = Knex({ client: 'pg', connection: workflowSettings });
 
-  const clean = () => {
+  const clean = dbName => {
+    if (dbName === 'flow') {
+      return flow.raw('TRUNCATE TABLE cases CASCADE');
+    }
+
+    if (dbName === 'asl') {
+      return Promise.resolve()
+        .then(() => asl('permissions').delete())
+        .then(() => asl('project_establishments').delete())
+        .then(() => asl('project_profiles').delete())
+        .then(() => asl('project_versions').delete())
+        .then(() => asl('projects').delete())
+        .then(() => asl('profiles').delete())
+        .then(() => asl('establishments').delete());
+    }
+
     return Promise.resolve()
       .then(() => flow('activity_log').delete())
       .then(() => flow('cases').delete())
