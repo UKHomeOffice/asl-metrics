@@ -2,10 +2,6 @@ const assert = require('assert');
 const generateTask = require('../../helpers/generate-task');
 const report = require('../../../lib/reports/internal-deadlines');
 
-const moment = require('moment-business-time');
-const { bankHolidays } = require('@asl/constants');
-moment.updateLocale('en', { holidays: bankHolidays });
-
 describe('Internal deadlines report', () => {
   beforeEach(() => {
     this.settings = {
