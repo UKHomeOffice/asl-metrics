@@ -147,6 +147,43 @@ describe('Internal deadlines report', () => {
       assert.deepEqual(this.report.parse(task), expected);
     });
 
+    it('ignores amendment tasks that were resubmitted and resolved after the initial deadline but before the resubmission deadline', () => {
+      const internalDeadline = { standard: '2021-12-31' };
+      const task = generateTask({ type: 'amendment', createdAt: '2021-12-01', internalDeadline });
+
+      task.history('with-inspectorate', 0);
+      task.history('returned-to-applicant', 10); // returned after 10 days (inside deadline)
+      task.history('with-inspectorate', 15, true); // resubmitted after 25 days (new 15 day deadline)
+      task.history('resolved', 10);
+
+      const expected = null;
+      assert.deepEqual(this.report.parse(task), expected);
+    });
+
+    it('returns amendment tasks that were returned after the initial deadline but then resolved before the resubmission deadline', () => {
+      const internalDeadline = { standard: '2021-12-31' };
+      const task = generateTask({ type: 'amendment', createdAt: '2021-12-01', internalDeadline });
+
+      task.history('with-inspectorate', 0);
+      task.history('returned-to-applicant', 25); // returned after 25 days (outside deadline)
+      task.history('with-inspectorate', 5, true); // resubmitted after 30 days (new 15 day deadline)
+      task.history('resolved', 10); // resolved within the new deadline
+
+      const expected = {
+        task_id: task.id,
+        project_title: task.data.modelData.title,
+        licence_number: task.data.modelData.licenceNumber,
+        type: 'amendment',
+        resubmitted: 'Yes',
+        extended: 'No',
+        still_open: 'No',
+        target: '2021-12-31',
+        resolved_at: '2022-01-31T00:00:00.000Z'
+      };
+
+      assert.deepEqual(this.report.parse(task), expected);
+    });
+
     it('returns open amendment tasks that have passed the internal deadline', () => {
       const internalDeadline = { standard: '2021-12-31' };
       const task = generateTask({ type: 'amendment', createdAt: '2021-12-01', internalDeadline });
