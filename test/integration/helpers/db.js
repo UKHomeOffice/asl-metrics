@@ -25,25 +25,14 @@ module.exports = () => {
 
     if (dbName === 'asl') {
       return Promise.resolve()
-        .then(() => asl('permissions').delete())
-        .then(() => asl('project_establishments').delete())
-        .then(() => asl('project_profiles').delete())
-        .then(() => asl('project_versions').delete())
-        .then(() => asl('projects').delete())
-        .then(() => asl('profiles').delete())
-        .then(() => asl('establishments').delete());
+        .then(() => asl.raw('TRUNCATE TABLE profiles CASCADE'))
+        .then(() => asl.raw('TRUNCATE TABLE establishments CASCADE'));
     }
 
     return Promise.resolve()
-      .then(() => flow('activity_log').delete())
-      .then(() => flow('cases').delete())
-      .then(() => asl('permissions').delete())
-      .then(() => asl('project_establishments').delete())
-      .then(() => asl('project_profiles').delete())
-      .then(() => asl('project_versions').delete())
-      .then(() => asl('projects').delete())
-      .then(() => asl('profiles').delete())
-      .then(() => asl('establishments').delete());
+      .then(() => flow.raw('TRUNCATE TABLE cases CASCADE'))
+      .then(() => asl.raw('TRUNCATE TABLE profiles CASCADE'))
+      .then(() => asl.raw('TRUNCATE TABLE establishments CASCADE'));
   };
 
   const close = () => {
