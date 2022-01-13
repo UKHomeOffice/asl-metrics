@@ -97,7 +97,7 @@ describe('Actioned tasks stats', () => {
                 approved: 2,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 1,
+                submitToActionDays: 2,
                 assignToActionDays: '-'
               }
             };
@@ -127,7 +127,7 @@ describe('Actioned tasks stats', () => {
                 approved: 1,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 1,
+                submitToActionDays: 2,
                 assignToActionDays: '-'
               }
             };
@@ -167,7 +167,7 @@ describe('Actioned tasks stats', () => {
                 approved: 2,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 6,
+                submitToActionDays: 7,
                 assignToActionDays: '-'
               }
             };
@@ -228,8 +228,8 @@ describe('Actioned tasks stats', () => {
                 approved: 1,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 3,
-                assignToActionDays: 1
+                submitToActionDays: 4,
+                assignToActionDays: 2
               }
             };
 
@@ -258,7 +258,7 @@ describe('Actioned tasks stats', () => {
                 approved: 0,
                 rejected: 1,
                 outstanding: 0,
-                submitToActionDays: 1,
+                submitToActionDays: 2,
                 assignToActionDays: '-'
               }
             };
@@ -288,7 +288,7 @@ describe('Actioned tasks stats', () => {
                 approved: 1,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 1,
+                submitToActionDays: 2,
                 assignToActionDays: '-'
               }
             };
@@ -318,7 +318,7 @@ describe('Actioned tasks stats', () => {
                 approved: 1,
                 rejected: 0,
                 outstanding: 0,
-                submitToActionDays: 1,
+                submitToActionDays: 2,
                 assignToActionDays: '-'
               }
             };
@@ -373,7 +373,7 @@ describe('Actioned tasks stats', () => {
                 approved: 1,
                 rejected: 0,
                 outstanding: 3,
-                submitToActionDays: 4,
+                submitToActionDays: 5,
                 assignToActionDays: '-'
               }
             };
