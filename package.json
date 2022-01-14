@@ -30,7 +30,7 @@
     "knex": "^0.95.11",
     "lodash": "^4.17.21",
     "moment": "^2.26.0",
-    "moment-business-time": "^1.0.0",
+    "moment-business-time": "^2.0.0",
     "pg": "^8.6.0",
     "through2": "^3.0.1"
   },

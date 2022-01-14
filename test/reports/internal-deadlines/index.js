@@ -86,7 +86,7 @@ describe('Internal deadlines report', () => {
         extended: 'No',
         still_open: 'No',
         target: '2021-12-03',
-        resolved_at: '2021-12-06T00:00:00.000Z'
+        resolved_at: '2021-12-06T00:00:01.003Z'
       };
 
       assert.deepEqual(this.report.parse(task), expected);
@@ -141,7 +141,7 @@ describe('Internal deadlines report', () => {
         extended: 'No',
         still_open: 'No',
         target: '2021-12-31',
-        resolved_at: '2022-01-04T00:00:00.000Z'
+        resolved_at: '2022-01-04T00:00:01.003Z'
       };
 
       assert.deepEqual(this.report.parse(task), expected);
@@ -178,7 +178,7 @@ describe('Internal deadlines report', () => {
         extended: 'No',
         still_open: 'No',
         target: '2021-12-31',
-        resolved_at: '2022-01-31T00:00:00.000Z'
+        resolved_at: '2022-01-31T00:00:01.010Z'
       };
 
       assert.deepEqual(this.report.parse(task), expected);

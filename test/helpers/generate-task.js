@@ -14,7 +14,9 @@ const generateTask = ({
   createdAt = '2021-12-01'
 }) => {
   const id = uuid();
-  createdAt = moment(createdAt).toISOString();
+
+  // add a second to avoid falling directly on midnight
+  createdAt = moment(createdAt).add(1, 'second').toISOString();
 
   const task = {
     id,
@@ -37,9 +39,18 @@ const generateTask = ({
       { id: uuid(), case_id: id, event_name: 'create', event: { status: 'new' }, created_at: createdAt, updated_at: createdAt }
     ],
     history: function(status, daysOffset = 1, resubmission = false) {
-      const previousStatus = this.status;
-      this.status = status;
-      this.updated_at = moment(this.updated_at).addWorkingTime(daysOffset, 'days').toISOString();
+      let eventName = status;
+
+      if (status !== 'assign') {
+        const previousStatus = this.status;
+        this.status = status;
+        eventName = `status:${previousStatus}:${status}`;
+      }
+
+      this.updated_at = moment(this.updated_at)
+        .addWorkingTime(daysOffset, 'days')
+        .add(this.activity.length, 'milliseconds') // add some ms to spread out activity
+        .toISOString();
 
       if (resubmission) {
         const interval = this.type === 'amendment' ? 15 : 20;
@@ -51,7 +62,8 @@ const generateTask = ({
 
       this.activity.unshift({
         id: uuid(),
-        event_name: `status:${previousStatus}:${status}`,
+        case_id: this.id,
+        event_name: eventName,
         event: cloneDeep(omit(this, ['activity', 'history'])),
         created_at: this.updated_at,
         updated_at: this.updated_at

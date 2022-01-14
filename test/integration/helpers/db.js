@@ -1,4 +1,5 @@
 const Knex = require('knex');
+const { pick } = require('lodash');
 
 module.exports = () => {
   const aslSettings = {
@@ -41,5 +42,19 @@ module.exports = () => {
       .then(() => flow.destroy());
   };
 
-  return { asl, flow, clean, close };
+  const insertTasks = tasks => {
+    return Promise.all(
+      tasks.map(task => {
+        return flow('cases')
+          .insert(pick(task, ['id', 'status', 'data', 'created_at', 'updated_at', 'assigned_to']))
+          .then(() => {
+            if (task.activity) {
+              return flow('activity_log').insert(task.activity);
+            }
+          });
+      })
+    );
+  };
+
+  return { asl, flow, clean, close, insertTasks };
 };
