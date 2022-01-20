@@ -29,6 +29,13 @@ describe('Actioned tasks stats', () => {
   before(() => {
     this.db = db();
 
+    const logger = {
+      info: msg => {},
+      debug: msg => {}
+    };
+
+    this.actionedTasks = ({ start, end }) => getStats({ logger, db: this.db, flow, start, end });
+
     return Promise.resolve()
       .then(() => this.db.clean());
   });
@@ -42,7 +49,7 @@ describe('Actioned tasks stats', () => {
   });
 
   it('returns empty results if there are no tasks found', () => {
-    return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+    return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
       .then(results => {
         assert.deepEqual(results, emptyResults);
       });
@@ -62,7 +69,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([pplApplication, pplAmendment]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             assert.deepEqual(results, emptyResults);
           });
@@ -87,7 +94,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([submittedReturned, submittedResolved, submittedBeforeResolvedDuringPeriod]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -117,7 +124,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([submittedResolved]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -157,7 +164,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([returnedTwice, returnedBeforePeriod]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -187,7 +194,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([returnedByAdmin]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -218,7 +225,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([assignedToInspector]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -248,7 +255,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([submittedRejected]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -268,6 +275,40 @@ describe('Actioned tasks stats', () => {
       });
   });
 
+  it('returns correct stats for PIL amendments', () => {
+    return Promise.resolve()
+      .then(() => {
+        const submittedBeforeResolvedDuring = generateTask({ model: 'pil', createdAt: '2021-11-20', type: 'amendment' });
+        submittedBeforeResolvedDuring.history('with-inspectorate', 0);
+        submittedBeforeResolvedDuring.history('resolved', 12);
+
+        const submittedResolved = generateTask({ model: 'pil', createdAt: '2021-12-01', type: 'amendment' });
+        submittedResolved.history('with-inspectorate', 0);
+        submittedResolved.history('resolved', 2);
+
+        return this.db.insertTasks([submittedBeforeResolvedDuring, submittedResolved]);
+      })
+      .then(() => {
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
+          .then(results => {
+            const expected = {
+              ...emptyResults,
+              pilAmendment: {
+                submitted: 1,
+                returned: 0,
+                approved: 2,
+                rejected: 0,
+                outstanding: 0,
+                submitToActionDays: 7,
+                assignToActionDays: '-'
+              }
+            };
+
+            assert.deepEqual(results, expected);
+          });
+      });
+  });
+
   it('returns correct stats for PIL revocations', () => {
     return Promise.resolve()
       .then(() => {
@@ -278,7 +319,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([submittedResolved]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -308,7 +349,7 @@ describe('Actioned tasks stats', () => {
         return this.db.insertTasks([submittedResolved]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
@@ -363,7 +404,7 @@ describe('Actioned tasks stats', () => {
         ]);
       })
       .then(() => {
-        return getStats({ db: this.db, flow, start: '2021-12-01', end: '2021-12-31' })
+        return this.actionedTasks({ start: '2021-12-01', end: '2021-12-31' })
           .then(results => {
             const expected = {
               ...emptyResults,
