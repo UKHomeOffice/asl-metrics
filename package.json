@@ -32,7 +32,8 @@
     "moment": "^2.26.0",
     "moment-business-time": "^2.0.0",
     "pg": "^8.6.0",
-    "through2": "^3.0.1"
+    "through2": "^3.0.1",
+    "winston": "^3.4.0"
   },
   "devDependencies": {
     "@asl/schema": "^10.5.2",
