@@ -29,7 +29,7 @@
     "express": "^4.17.1",
     "knex": "^0.95.11",
     "lodash": "^4.17.21",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "moment-business-time": "^2.0.0",
     "pg": "^8.6.0",
     "through2": "^3.0.1",
