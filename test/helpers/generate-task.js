@@ -60,7 +60,7 @@ const generateTask = ({
         };
       }
 
-      this.activity.unshift({
+      this.activity.push({
         id: uuid(),
         case_id: this.id,
         event_name: eventName,
