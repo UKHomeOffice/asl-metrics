@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+const generateReminders = require('../test/helpers/generate-reminders');
+
+Promise.resolve()
+  .then(() => generateReminders())
+  .then(() => process.exit(0))
+  .catch(err => {
+    console.error(err.stack);
+    process.exit(1);
+  });
