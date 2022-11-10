@@ -26,9 +26,9 @@
   "dependencies": {
     "@asl/constants": "^1.2.2",
     "@asl/projects": "^10.9.8",
-    "@asl/service": "^8.8.5",
+    "@asl/service": "^9.2.0",
     "express": "^4.17.1",
-    "knex": "^0.95.11",
+    "knex": "^0.21.21",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
     "moment-business-time": "^2.0.0",
@@ -38,8 +38,8 @@
     "winston": "^3.4.0"
   },
   "devDependencies": {
-    "@asl/schema": "^10.5.2",
-    "@ukhomeoffice/taskflow": "^2.6.1",
+    "@asl/schema": "^10.16.0",
+    "@ukhomeoffice/taskflow": "^2.7.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
