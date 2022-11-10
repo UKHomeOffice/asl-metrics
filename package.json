@@ -38,8 +38,8 @@
     "winston": "^3.4.0"
   },
   "devDependencies": {
-    "@asl/schema": "^10.5.2",
-    "@ukhomeoffice/taskflow": "^2.6.1",
+    "@asl/schema": "^10.16.0",
+    "@ukhomeoffice/taskflow": "^2.7.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
