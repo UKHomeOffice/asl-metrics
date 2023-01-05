@@ -9,6 +9,7 @@
     "test:lint": "eslint .",
     "pretest:unit": "npm run migrate",
     "test:unit": "mocha ./test --recursive",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "migrate": "npm run migrate:flow && npm run migrate:asl",
     "migrate:asl": "NODE_ENV=test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js",
     "migrate:flow": "node ./scripts/migrate.js"
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@asl/schema": "^10.16.0",
     "@ukhomeoffice/taskflow": "^2.7.0",
+    "audit-ci": "^6.5.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "eslint-config-lennym": "^2.1.2",
