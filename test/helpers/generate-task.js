@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid');
 const { omit, cloneDeep } = require('lodash');
 
 const moment = require('moment-business-time');
-const { bankHolidays } = require('@asl/constants');
+const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 moment.updateLocale('en', { holidays: bankHolidays });
 
 const generateTask = ({
