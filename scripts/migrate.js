@@ -1,5 +1,5 @@
 /* eslint-disable implicit-dependencies/no-implicit */
-const Taskflow = require('@ukhomeoffice/taskflow');
+const Taskflow = require('@ukhomeoffice/asl-taskflow');
 
 const db = {
   database: process.env.WORKFLOW_DATABASE_NAME || 'taskflow-test',
