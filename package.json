@@ -1,6 +1,6 @@
 {
   "name": "asl-metrics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
-    "@ukhomeoffice/asl-constants": "^2.1.1",
-    "@asl/projects": "^14.0.1",
+    "@ukhomeoffice/asl-constants": "^2.1.4",
+    "@asl/projects": "^15.0.2",
     "@asl/service": "^10.0.2",
     "express": "^4.17.1",
     "knex": "^0.21.21",
