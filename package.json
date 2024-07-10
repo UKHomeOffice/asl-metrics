@@ -44,7 +44,7 @@
     "audit-ci": "^6.5.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
-    "eslint-config-lennym": "^2.1.2",
+    "@ukhomeoffice/asl-eslint-common": "^2.2.0",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.4",
     "sinon": "^9.0.2",

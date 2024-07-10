@@ -1,5 +1,5 @@
 extends:
-  - lennym
+  - "./node_modules/@ukhomeoffice/asl-eslint-common/index.js"
 
 globals:
   fetch: readonly
