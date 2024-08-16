@@ -1,10 +1,14 @@
 {
   "comments": [
     "GHSA-grv7-fg5c-xmjg: braces",
-    "GHSA-4jv9-3563-23j3: Knex"
+    "GHSA-4jv9-3563-23j3: Knex",
+    "GHSA-67hx-6x53-jw92: Babel",
+    "GHSA-c2qf-rxjj-qqgw: semver vulnerable to Regular Expression Denial of Service"
   ],
   "allowlist": [
     "GHSA-4jv9-3563-23j3",
-    "GHSA-grv7-fg5c-xmjg"
+    "GHSA-grv7-fg5c-xmjg",
+    "GHSA-67hx-6x53-jw92",
+    "GHSA-c2qf-rxjj-qqgw"
   ]
 }
