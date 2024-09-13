@@ -1,6 +1,6 @@
 {
   "name": "asl-metrics",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "audit-ci": "^6.5.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
-    "@ukhomeoffice/asl-eslint-common": "^2.2.0",
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.4",
     "sinon": "^9.0.2",
