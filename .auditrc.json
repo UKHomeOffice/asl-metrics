@@ -1,10 +1,14 @@
 {
   "comments": [
-    "GHSA-4jv9-3563-23j3 - this is a SQL injection vulnerability that only affects MySQL see https://github.com/advisories/GHSA-4jv9-3563-23j3, https://github.com/knex/knex/issues/1227 & https://www.ghostccamm.com/blog/knex_sqli/",
-    "GHSA-hc6q-2mpp-qw7j:Webpack 5 before 5.76.0 does not avoid cross-realm object access. ImportParserPlugin.js mishandles the magic comment feature. An attacker who controls a property of an untrusted object can obtain access to the real global object. https://github.com/advisories/GHSA-hc6q-2mpp-qw7j"
+    "GHSA-grv7-fg5c-xmjg: braces",
+    "GHSA-4jv9-3563-23j3: Knex",
+    "GHSA-67hx-6x53-jw92: Babel",
+    "GHSA-c2qf-rxjj-qqgw: semver vulnerable to Regular Expression Denial of Service"
   ],
   "allowlist": [
     "GHSA-4jv9-3563-23j3",
-    "GHSA-hc6q-2mpp-qw7j"
+    "GHSA-grv7-fg5c-xmjg",
+    "GHSA-67hx-6x53-jw92",
+    "GHSA-c2qf-rxjj-qqgw"
   ]
 }
