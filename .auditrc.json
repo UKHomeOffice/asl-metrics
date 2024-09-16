@@ -3,12 +3,16 @@
     "GHSA-grv7-fg5c-xmjg: braces",
     "GHSA-4jv9-3563-23j3: Knex",
     "GHSA-67hx-6x53-jw92: Babel",
-    "GHSA-c2qf-rxjj-qqgw: semver vulnerable to Regular Expression Denial of Service"
+    "GHSA-c2qf-rxjj-qqgw: semver vulnerable to Regular Expression Denial of Service",
+    "GHSA-qwcr-r2fm-qrc7: body-parser (npm)",
+    "GHSA-9wv6-86v2-598j: path-to-regexp (npm)"
   ],
   "allowlist": [
     "GHSA-4jv9-3563-23j3",
     "GHSA-grv7-fg5c-xmjg",
     "GHSA-67hx-6x53-jw92",
-    "GHSA-c2qf-rxjj-qqgw"
+    "GHSA-c2qf-rxjj-qqgw",
+    "GHSA-qwcr-r2fm-qrc7",
+    "GHSA-9wv6-86v2-598j"
   ]
 }
