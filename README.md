@@ -4,7 +4,7 @@
 
 If running locally, the database environment variables should be set in `.env` as per `asl-workflow`.
 
-Additionally the following should be defined in `.env`:
+Additionally, the following should be defined in `.env`:
 
 ```
 PORT=8089
@@ -65,6 +65,6 @@ module.exports = ({ db }) => {
 
 ## Streaming
 
-By default reports return newline delimited json streams. A complete json object can be requested by passing a querystring parameter of `?stream=false`.
+By default, reports return newline delimited json streams. A complete json object can be requested by passing a querystring parameter of `?stream=false`.
 
 Note: sending complete responses is not recommended for large reports or reports which ingest large numbers of database records.

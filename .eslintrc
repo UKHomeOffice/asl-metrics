@@ -3,3 +3,6 @@ extends:
 
 globals:
   fetch: readonly
+
+parserOptions:
+  ecmaVersion: latest
