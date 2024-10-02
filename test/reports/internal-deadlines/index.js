@@ -1,10 +1,13 @@
 const assert = require('assert');
 const generateTask = require('../../helpers/generate-task');
-const report = require('../../../lib/reports/internal-deadlines');
+const reportProvider = require('../../../lib/reports/internal-deadlines');
 
 describe('Internal deadlines report', () => {
+  let settings;
+  let report;
+
   beforeEach(() => {
-    this.settings = {
+    settings = {
       db: {},
       query: {
         start: '2021-12-01',
@@ -12,7 +15,7 @@ describe('Internal deadlines report', () => {
       }
     };
 
-    this.report = report(this.settings);
+    report = reportProvider(settings);
   });
 
   describe('parse', () => {
@@ -21,7 +24,7 @@ describe('Internal deadlines report', () => {
       task.history('with-inspectorate', 0);
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('ignores closed tasks that have no internal deadline set', () => {
@@ -30,7 +33,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 40); // 2022-02-01
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('ignores tasks with an internal deadline outside of the reporting period', () => {
@@ -41,7 +44,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 100); // 2022-05-16
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('ignores application tasks that were resolved before the internal deadline', () => {
@@ -53,7 +56,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 40);
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('ignores application tasks that were resolved before an extended internal deadline', () => {
@@ -66,7 +69,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 45); // resolved after the standard deadline but before the extended deadline
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('returns application tasks that were resolved after the internal deadline', () => {
@@ -89,7 +92,7 @@ describe('Internal deadlines report', () => {
         resolved_at: '2021-12-06T00:00:01.003Z'
       };
 
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
 
     it('returns open application tasks that have passed the internal deadline', () => {
@@ -111,7 +114,7 @@ describe('Internal deadlines report', () => {
         resolved_at: undefined
       };
 
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
 
     it('ignores amendment tasks that were resolved before the internal deadline', () => {
@@ -122,7 +125,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 20);
 
       const expected = null;
-      assert.equal(this.report.parse(task), expected);
+      assert.equal(report.parse(task), expected);
     });
 
     it('returns amendment tasks that were resolved after the internal deadline', () => {
@@ -144,7 +147,7 @@ describe('Internal deadlines report', () => {
         resolved_at: '2022-01-04T00:00:01.003Z'
       };
 
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
 
     it('ignores amendment tasks that were resubmitted and resolved after the initial deadline but before the resubmission deadline', () => {
@@ -157,7 +160,7 @@ describe('Internal deadlines report', () => {
       task.history('resolved', 10);
 
       const expected = null;
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
 
     it('returns amendment tasks that were returned after the initial deadline but then resolved before the resubmission deadline', () => {
@@ -181,7 +184,7 @@ describe('Internal deadlines report', () => {
         resolved_at: '2022-01-31T00:00:01.010Z'
       };
 
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
 
     it('returns open amendment tasks that have passed the internal deadline', () => {
@@ -202,7 +205,7 @@ describe('Internal deadlines report', () => {
         resolved_at: undefined
       };
 
-      assert.deepEqual(this.report.parse(task), expected);
+      assert.deepEqual(report.parse(task), expected);
     });
   });
 

@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { v4: uuid } = require('uuid');
 
-const db = require('../helpers/db');
+const dbProvider = require('../helpers/db');
 const report = require('../../../lib/reports/ppl-details');
 
 const ids = {
@@ -10,18 +10,19 @@ const ids = {
 };
 
 describe('PPL Details Report', () => {
+  let db;
 
   before(() => {
-    this.db = db();
-    return this.db.clean();
+    db = dbProvider();
+    return db.clean();
   });
 
   before(() => {
     return Promise.resolve()
-      .then(() => this.db.asl('establishments').insert({
+      .then(() => db.asl('establishments').insert({
         id: 100, name: 'Test Establishment', status: 'active'
       }))
-      .then(() => this.db.asl('projects').insert([
+      .then(() => db.asl('projects').insert([
         {
           id: ids.active,
           establishment_id: 100,
@@ -36,7 +37,7 @@ describe('PPL Details Report', () => {
           status: 'inactive'
         }
       ]))
-      .then(() => this.db.asl('project_versions').insert([
+      .then(() => db.asl('project_versions').insert([
         {
           project_id: ids.draft,
           data: {
@@ -65,11 +66,11 @@ describe('PPL Details Report', () => {
   });
 
   after(() => {
-    return this.db.close();
+    return db.close();
   });
 
   it('returns one row per granted project', () => {
-    const { query, parse } = report({ db: this.db });
+    const { query, parse } = report({ db: db });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
@@ -80,7 +81,7 @@ describe('PPL Details Report', () => {
   });
 
   it('returns protocol counts and severities based on most recent version', () => {
-    const { query, parse } = report({ db: this.db });
+    const { query, parse } = report({ db: db });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
