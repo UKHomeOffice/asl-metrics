@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
+    "@asl/projects": "^15.6.6",
+    "@asl/service": "^10.3.2",
     "@ukhomeoffice/asl-constants": "^2.1.4",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
-    "@asl/projects": "^15.0.2",
-    "@asl/service": "^10.0.2",
     "express": "^4.17.1",
     "knex": "^0.21.21",
     "lodash": "^4.17.21",
@@ -41,12 +41,13 @@
   },
   "devDependencies": {
     "@asl/schema": "^10.16.0",
+    "@babel/register": "^7.8.3",
     "@ukhomeoffice/asl-taskflow": "^3.1.0",
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "audit-ci": "^6.5.0",
     "dotenv": "^8.2.0",
     "eslint": "^8.57.1",
-    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "mocha": "^10.1.0",
+    "mocha": "^10.7.3",
     "nodemon": "^2.0.4",
     "sinon": "^9.0.2",
     "uuid": "^8.1.0"
