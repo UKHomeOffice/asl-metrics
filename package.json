@@ -27,7 +27,7 @@
   "dependencies": {
     "@asl/projects": "^15.6.6",
     "@asl/service": "^10.3.2",
-    "@ukhomeoffice/asl-constants": "^2.1.4",
+    "@ukhomeoffice/asl-constants": "^2.1.6",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "express": "^4.17.1",
     "knex": "^0.21.21",
