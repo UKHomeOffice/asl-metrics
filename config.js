@@ -1,7 +1,7 @@
 module.exports = {
-  port: process.env.PORT || 8089,
+  port: process.env.PORT || 8080,
   verboseErrors: process.env.VERBOSE_ERRORS === 'true',
-  flowUrl: process.env.FLOW_URL || 'http://localhost:8083',
+  flowUrl: process.env.FLOW_URL,
   workflowdb: {
     database: process.env.DATABASE_NAME || 'taskflow',
     host: process.env.DATABASE_HOST,
@@ -18,9 +18,9 @@ module.exports = {
     application_name: 'metrics'
   },
   auth: {
-    realm: process.env.KEYCLOAK_REALM || 'Asl-dev',
-    url: process.env.KEYCLOAK_URL || 'https://sso-dev.notprod.homeoffice.gov.uk/auth',
-    client: process.env.KEYCLOAK_CLIENT || 'asl-dev-connect',
-    secret: process.env.KEYCLOAK_SECRET || 'dac82159-c85c-49ed-b268-abb1b916e53b'
+    realm: process.env.KEYCLOAK_REALM,
+    url: process.env.KEYCLOAK_URL,
+    client: process.env.KEYCLOAK_CLIENT,
+    secret: process.env.KEYCLOAK_SECRET
   }
 };
