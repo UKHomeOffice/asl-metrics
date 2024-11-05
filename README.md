@@ -11,6 +11,8 @@ PORT=8089
 FLOW_URL=http://localhost:8083/flow
 ```
 
+Copy (.env.example)[./.env.example] to `.env` and replace secret values (e.g. Keycloak secret).
+
 ## Reports
 
 The code for a report should consist of a function that receives the inbound request returns two methods: `query` and `parse`.
