@@ -11,7 +11,7 @@
     "test:unit": "mocha ./test --recursive",
     "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "migrate": "npm run migrate:flow && npm run migrate:asl",
-    "migrate:asl": "NODE_ENV=test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js",
+    "migrate:asl": "NODE_ENV=test node ./scripts/asl-migrate.js",
     "migrate:flow": "node ./scripts/migrate.js"
   },
   "repository": {
@@ -40,7 +40,7 @@
     "winston": "^3.4.0"
   },
   "devDependencies": {
-    "@asl/schema": "^10.18.7",
+    "@asl/schema": "^11.0.0",
     "@babel/register": "^7.8.3",
     "@ukhomeoffice/asl-taskflow": "^3.1.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
