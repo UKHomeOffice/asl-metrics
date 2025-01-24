@@ -42,7 +42,7 @@
   "devDependencies": {
     "@asl/schema": "^11.0.0",
     "@babel/register": "^7.8.3",
-    "@ukhomeoffice/asl-taskflow": "^3.2.0",
+    "@ukhomeoffice/asl-taskflow": "^4.0.1",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "audit-ci": "^6.5.0",
     "dotenv": "^8.2.0",
