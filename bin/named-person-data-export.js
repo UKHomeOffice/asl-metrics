@@ -170,11 +170,11 @@ async function mergeAndSaveCSV() {
               last_name: profile.last_name,
               email: profile.email,
               telephone: profile.telephone,
-              permission_role_admin: profile.admin,
+              admin: profile.admin,
               establishment_status: profile.status,
               roles: profile.roles,
-              taskflow_cases_id: caseData.case_id,
-              taskflow_cases_status: caseData.status
+              cases: caseData.case_id,
+              cases_status: caseData.status
             });
 
             profileCaseMap.get(profile.profile_id).add(log.case_id); // Prevent duplicate cases for this profile
@@ -186,7 +186,7 @@ async function mergeAndSaveCSV() {
     // Write the result to CSV
     const csvStream = fastCsv.format({
       headers: [
-        'profile_id', 'title', 'first_name', 'last_name', 'email', 'telephone', 'admin', 'roles', 'status', 'cases'
+        'profile_id', 'title', 'first_name', 'last_name', 'email', 'telephone', 'admin', 'roles', 'establishment_status', 'cases', 'cases_status'
       ]
     });
 
