@@ -1,12 +1,3 @@
-/**
- * run script like node named-person-data-export.js "pelh" "resolved" "2023-03-01" "2025-03-01"
- *
- * @param {string} role - role to filter by
- * @param {string} status - status to filter by
- * returns a CSV file with the following columns:
- * title, first_name, last_name, email, telephone, admin, roles, establishment_name, establishment_status, case_id, changed_by, case_status, model, model_status
- * */
-
 const fs = require('fs');
 const fastCsv = require('fast-csv');
 const moment = require('moment');
@@ -31,7 +22,17 @@ let [role, status, start, end] = process.argv.slice(2);
 
 start = start + 'T00:00:00Z';
 end = end + 'T23:59:59Z';
-// Query DB ASL
+
+// Function to chunk an array into smaller chunks
+function chunkArray(array, size) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
+
+// Query DB ASL for profiles
 async function getProfiles() {
   console.log(`\nQuery Parameters:
   - role: ${role}
@@ -64,7 +65,6 @@ async function getProfiles() {
     .where(function () {
       this.where('permissions.role', 'admin').orWhereNotNull('roles.id');
     })
-    // process.argv[0] is the first argument passed to the script - role i.e "pelh, nvs"
     .andWhere('roles.type', role)
     .groupBy('establishments.id', 'p.id', 'permissions.role', 'roles.profile_id')
     .orderBy('p.last_name', 'asc')
@@ -72,84 +72,124 @@ async function getProfiles() {
     .orderBy('establishments.name', 'asc');
 }
 
-// Query DB Taskflow
-async function getActivityLogs() {
-  return knexTaskflow
-    .select(
-      'cases.id AS case_id',
-      'activity_log.changed_by',
-      'cases.status',
-      knexTaskflow.raw("cases.data->>'model' AS model"),
-      knexTaskflow.raw("cases.data->'modelData'->>'status' AS model_status")
-    )
-    .from('cases')
-    .join('activity_log', 'cases.id', 'activity_log.case_id');
+// Query DB Taskflow - Activity logs with distinct changed_by
+async function getActivityLogs(profileIds) {
+  const chunks = chunkArray(profileIds, 100); // Adjust chunk size as needed
+  let allActivityLogs = [];
+
+  for (const chunk of chunks) {
+    const chunkLogs = await knexTaskflow
+      .select(
+        'activity_log.case_id',
+        'activity_log.changed_by'
+      )
+      .from('activity_log')
+      .whereIn('activity_log.changed_by', chunk)
+      .distinct('activity_log.case_id'); // Ensure distinct case_ids
+    allActivityLogs = allActivityLogs.concat(chunkLogs);
+  }
+
+  return allActivityLogs;
 }
 
-async function getCases() {
+// Query DB Taskflow - Cases based on case_id
+async function getCases(caseIds) {
   return knexTaskflow
     .select(
       'c.id AS case_id',
-      'a_log.changed_by AS assigned_to',
       'c.status',
       knexTaskflow.raw("c.data->>'model' AS model"),
       knexTaskflow.raw("c.data->'modelData'->>'status' AS model_status")
     )
-    .from({ c: 'cases' }) // Alias for cases table
-    .join({ a_log: 'activity_log' }, 'c.id', 'a_log.case_id') // Join with activity_log
-    .whereIn('c.status', [status]) // Status filter
+    .from({ c: 'cases' })
+    .whereIn('c.id', caseIds) // Filter cases based on the case_id from activity_log
+    .whereIn('c.status', [status]) // Filter by case status
     .whereBetween('c.updated_at', [
       moment(start).startOf('day').toISOString(),
       moment(end).endOf('day').toISOString()
-    ]); // Fixed date range
+    ]);
 }
 
-// Merge Data
 async function mergeAndSaveCSV() {
   try {
+    // Fetch profiles based on role filter
     const profiles = await getProfiles();
     console.log('Profiles from DB ASL:', profiles.length);
 
-    const queryActivityLog = await getActivityLogs();
-    console.log('Activity_Logs from DB Taskflow:', queryActivityLog.length);
+    // Extract profile_ids for filtering activity logs
+    const profileIds = profiles.map(profile => profile.profile_id);
 
-    const queryCases = await getCases();
-    console.log('Cases rom DB Taskflow::', queryCases.length);
+    // Fetch activity logs based on the profile_ids
+    const queryActivityLog = await getActivityLogs(profileIds);
+    console.log('Activity Logs from DB Taskflow:', queryActivityLog.length);
 
-    // Convert profiles array to an object for quick lookup
-    const profileMap = profiles.reduce((acc, profile) => {
-      acc[profile.profile_id] = profile;
+    // Extract case_ids from activity logs
+    const caseIds = [...new Set(queryActivityLog.map(log => log.case_id))]; // Remove duplicates
+
+    // Fetch cases based on the extracted case_ids
+    const queryCases = await getCases(caseIds);
+    console.log('Cases from DB Taskflow:', queryCases.length);
+
+    // Convert cases array to a map for quick lookup
+    const casesMap = queryCases.reduce((acc, caseData) => {
+      acc[caseData.case_id] = caseData;
       return acc;
     }, {});
 
-    // Merge closed cases
-    const mergedData = queryActivityLog
-      .map((caseData) => ({
-        ...profileMap[caseData.assigned_to], // Get profile data
-        ...caseData // Add case data
-      }))
-      .filter((row) => row.profile_id); // Remove cases with no profile match
+    // Prepare the final result
+    const result = [];
 
-    // Merge open cases
-    queryCases.forEach((caseData) => {
-      if (profileMap[caseData.assigned_to]) {
-        mergedData.push({
-          ...profileMap[caseData.assigned_to],
-          ...caseData
-        });
+    // Keep track of cases already added per profile
+    const profileCaseMap = new Map();
+
+    profiles.forEach(profile => {
+      // Ensure each profile only gets a case once, regardless of organization
+      if (!profileCaseMap.has(profile.profile_id)) {
+        profileCaseMap.set(profile.profile_id, new Set());
       }
+
+      queryActivityLog.forEach(log => {
+        if (log.changed_by === profile.profile_id) {
+          const caseData = casesMap[log.case_id];
+
+          if (caseData && !profileCaseMap.get(profile.profile_id).has(log.case_id)) {
+            result.push({
+              profile_id: profile.profile_id,
+              title: profile.title,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+              email: profile.email,
+              telephone: profile.telephone,
+              admin: profile.admin,
+              roles: profile.roles,
+              status: profile.status,
+              cases: `Case ID: ${caseData.case_id}, Status: ${caseData.status}, Model: ${caseData.model}, Model Status: ${caseData.model_status}`
+            });
+
+            profileCaseMap.get(profile.profile_id).add(log.case_id); // Prevent duplicate cases for this profile
+          }
+        }
+      });
     });
 
-    // Write to CSV
-    const csvStream = fastCsv.format({ headers: true });
-    const writableStream = fs.createWriteStream('merged_data.csv');
+    // Check the result
+    console.log('Merged Result:', result);
+
+    // Write the result to CSV
+    const csvStream = fastCsv.format({
+      headers: [
+        'profile_id', 'title', 'first_name', 'last_name', 'email', 'telephone', 'admin', 'roles', 'status', 'cases'
+      ]
+    });
+
+    const writableStream = fs.createWriteStream('merged_profiles_cases.csv');
 
     writableStream.on('finish', () => {
-      console.log('\nCSV file merged_data.csv created with', mergedData.length, 'rows');
+      console.log('\nCSV file merged_profiles_cases.csv created with', result.length, 'rows');
     });
 
     csvStream.pipe(writableStream);
-    mergedData.forEach((row) => csvStream.write(row));
+    result.forEach(row => csvStream.write(row)); // Write each row
     csvStream.end();
   } catch (error) {
     console.error('Error merging data:', error);
