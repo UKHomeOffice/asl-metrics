@@ -9,6 +9,7 @@
 
 const fs = require('fs');
 const fastCsv = require('fast-csv');
+const moment = require('moment');
 const settings = require('../config');
 
 const knexTaskflow = require('knex')({
@@ -33,13 +34,20 @@ const knexASL = require('knex')({
   }
 });
 
-// Read CLI arguments
-const [role, status] = process.argv.slice(2);
-let statusArray = new Array(status);
+// Read CLI arguments safely
+if (process.argv.length < 6) {
+  console.error('Usage: node named-person-data-export.js <role> <status> <start_date> <end_date>');
+  process.exit(1);
+}
+const [role, status, start, end] = process.argv.slice(2);
+
 // Query DB ASL
 async function getProfiles() {
-  console.log('Query for role:', role, '\n');
-  console.log('Query for status:', statusArray, '\n');
+  console.log(`\nQuery Parameters:
+  - Role: ${role}
+  - Status: ${status}
+  - Start Date: ${start}
+  - End Date: ${end}\n`);
   return knexASL
     .select(
       'roles.profile_id',
@@ -101,8 +109,8 @@ async function getCases() {
     .join({ a_log: 'activity_log' }, 'c.id', 'a_log.case_id') // Join with activity_log
     .whereIn('c.status', [status]) // Status filter
     .whereBetween('c.updated_at', [
-      '2023-03-01T00:00:00Z',
-      '2025-02-01T23:59:59Z'
+      moment(start).startOf('day').toISOString(),
+      moment(end).endOf('day').toISOString()
     ]); // Fixed date range
 }
 
