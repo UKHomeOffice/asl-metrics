@@ -1,3 +1,13 @@
+/**
+ * Extract data to CSV from ASL and Taskflow databases.
+ * Run:  node named-person-data-export.js "pelh" "resolved" "2020-01-01" "2025-03-03"
+ * @param {string} role - Role type (e.g. 'pelh')
+ * @param {string} status - Case status (e.g. 'resolved')
+ * @param {string} start - Start date (e.g. '2020-01-01')
+ * @param {string} end - End date (e.g. '2025-03-03')
+ * @returns {CSV} - CSV file with the extracted data
+ * */
+
 const fs = require('fs');
 const fastCsv = require('fast-csv');
 const moment = require('moment');
@@ -160,10 +170,11 @@ async function mergeAndSaveCSV() {
               last_name: profile.last_name,
               email: profile.email,
               telephone: profile.telephone,
-              admin: profile.admin,
+              permission_role_admin: profile.admin,
+              establishment_status: profile.status,
               roles: profile.roles,
-              status: profile.status,
-              cases: `Case ID: ${caseData.case_id}, Status: ${caseData.status}, Model: ${caseData.model}, Model Status: ${caseData.model_status}`
+              taskflow_cases_id: caseData.case_id,
+              taskflow_cases_status: caseData.status
             });
 
             profileCaseMap.get(profile.profile_id).add(log.case_id); // Prevent duplicate cases for this profile
@@ -171,9 +182,6 @@ async function mergeAndSaveCSV() {
         }
       });
     });
-
-    // Check the result
-    console.log('Merged Result:', result);
 
     // Write the result to CSV
     const csvStream = fastCsv.format({
