@@ -1,5 +1,5 @@
 /**
- * run script like node named-person-data-export.js "pelh" "resolved"
+ * run script like node named-person-data-export.js "pelh" "resolved" "2023-03-01" "2025-03-01"
  *
  * @param {string} role - role to filter by
  * @param {string} status - status to filter by
@@ -27,8 +27,10 @@ if (process.argv.length < 6) {
   console.error('Usage: node named-person-data-export.js <role> <status> <start_date> <end_date>');
   process.exit(1);
 }
-const [role, status, start, end] = process.argv.slice(2);
+let [role, status, start, end] = process.argv.slice(2);
 
+start = start + 'T00:00:00Z';
+end = end + 'T23:59:59Z';
 // Query DB ASL
 async function getProfiles() {
   console.log(`\nQuery Parameters:
