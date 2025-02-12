@@ -120,11 +120,11 @@ async function mergeAndSaveCSV() {
     const profiles = await getProfiles();
     console.log('Profiles from DB ASL:', profiles.length);
 
-    const closedCases = await getActivityLogs();
-    console.log('Activity_Logs from DB Taskflow:', closedCases.length);
+    const queryActivityLog = await getActivityLogs();
+    console.log('Activity_Logs from DB Taskflow:', queryActivityLog.length);
 
-    const openCases = await getCases();
-    console.log('Cases rom DB Taskflow::', openCases.length);
+    const queryCases = await getCases();
+    console.log('Cases rom DB Taskflow::', queryCases.length);
 
     // Convert profiles array to an object for quick lookup
     const profileMap = profiles.reduce((acc, profile) => {
@@ -133,7 +133,7 @@ async function mergeAndSaveCSV() {
     }, {});
 
     // Merge closed cases
-    const mergedData = closedCases
+    const mergedData = queryActivityLog
       .map((caseData) => ({
         ...profileMap[caseData.assigned_to], // Get profile data
         ...caseData // Add case data
@@ -141,7 +141,7 @@ async function mergeAndSaveCSV() {
       .filter((row) => row.profile_id); // Remove cases with no profile match
 
     // Merge open cases
-    openCases.forEach((caseData) => {
+    queryCases.forEach((caseData) => {
       if (profileMap[caseData.assigned_to]) {
         mergedData.push({
           ...profileMap[caseData.assigned_to],
