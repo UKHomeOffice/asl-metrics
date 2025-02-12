@@ -14,24 +14,12 @@ const settings = require('../config');
 
 const knexTaskflow = require('knex')({
   client: 'pg',
-  connection: {
-    host: settings.workflowdb.host,
-    user: settings.workflowdb.user,
-    password: settings.workflowdb.password,
-    database: settings.workflowdb.database,
-    port: settings.workflowdb.port
-  }
+  connection: settings.workflowdb
 });
 
 const knexASL = require('knex')({
   client: 'pg',
-  connection: {
-    host: settings.asldb.host,
-    user: settings.asldb.user,
-    password: settings.asldb.password,
-    database: settings.asldb.database,
-    port: settings.asldb.port
-  }
+  connection: settings.asldb
 });
 
 // Read CLI arguments safely
@@ -44,10 +32,10 @@ const [role, status, start, end] = process.argv.slice(2);
 // Query DB ASL
 async function getProfiles() {
   console.log(`\nQuery Parameters:
-  - Role: ${role}
-  - Status: ${status}
-  - Start Date: ${start}
-  - End Date: ${end}\n`);
+  - role: ${role}
+  - status: ${status}
+  - start Date: ${start}
+  - end Date: ${end}\n`);
   return knexASL
     .select(
       'roles.profile_id',
@@ -155,7 +143,7 @@ async function mergeAndSaveCSV() {
     const writableStream = fs.createWriteStream('merged_data.csv');
 
     writableStream.on('finish', () => {
-      console.log('\nCSV file created: merged_data.csv');
+      console.log('\nCSV file merged_data.csv created with', mergedData.length, 'rows');
     });
 
     csvStream.pipe(writableStream);
