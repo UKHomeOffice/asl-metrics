@@ -1,6 +1,6 @@
 {
   "name": "asl-metrics",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -30,8 +30,10 @@
     "@ukhomeoffice/asl-constants": "^2.2.0",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "express": "^4.17.1",
+    "fast-csv": "^5.0.2",
     "knex": "^3.1.0",
     "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
     "moment": "^2.29.2",
     "moment-business-time": "^2.0.0",
     "pg": "^8.6.0",
