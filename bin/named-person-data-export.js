@@ -187,6 +187,8 @@ async function mergeAndSaveCSV() {
           if (caseData && !profileCaseMap.get(profile.profile_id).has(log.case_id)) {
             result.push({
               profile_id: profile.profile_id,
+              roles: profile.roles,
+              cases_status: caseData.status,
               title: profile.title,
               first_name: profile.first_name,
               last_name: profile.last_name,
@@ -194,9 +196,7 @@ async function mergeAndSaveCSV() {
               telephone: profile.telephone,
               admin: profile.admin,
               establishment_status: profile.status,
-              roles: profile.roles,
-              cases: caseData.case_id,
-              cases_status: caseData.status
+              cases: caseData.case_id
             });
 
             profileCaseMap.get(profile.profile_id).add(log.case_id); // Prevent duplicate cases for this profile
@@ -211,7 +211,7 @@ async function mergeAndSaveCSV() {
     // Write the result to CSV
     const csvStream = fastCsv.format({
       headers: [
-        'profile_id', 'title', 'first_name', 'last_name', 'email', 'telephone', 'admin', 'roles', 'establishment_status', 'cases', 'cases_status'
+        'profile_id', 'roles', 'cases_status', 'title', 'first_name', 'last_name', 'email', 'telephone', 'admin', 'establishment_status', 'cases'
       ]
     });
 
