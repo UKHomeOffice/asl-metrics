@@ -1,6 +1,12 @@
 /**
  * Extract data to CSV from ASL and Taskflow databases.
- * Run:  node named-person-data-export.js "pelh" "resolved" "2020-01-01" "2025-03-03" "pelh_resolved.csv"
+ * Run:  node named-person-data-export.js
+ * --role="pelh"
+ * --status="resolved"
+ * --start="2020-01-01"
+ * --end="2025-03-03"
+ * --fileName="pelh_resolved.csv"
+ *
  * @param {string} role - Role type (e.g. 'pelh')
  * @param {string} status - Case status (e.g. 'resolved')
  * @param {string} start - Start date (e.g. '2020-01-01')
@@ -12,6 +18,7 @@
 const fs = require('fs');
 const fastCsv = require('fast-csv');
 const moment = require('moment');
+const minimist = require('minimist');
 const settings = require('../config');
 
 const knexTaskflow = require('knex')({
@@ -29,7 +36,9 @@ if (process.argv.length < 6) {
   console.error('Usage: node named-person-data-export.js <role> <status> <start_date> <end_date>');
   process.exit(1);
 }
-let [role, status, start, end, fileName] = process.argv.slice(2);
+
+const args = minimist(process.argv.slice(2));
+let { role, status, start, end, fileName } = args;
 
 start = start + 'T00:00:00Z';
 end = end + 'T23:59:59Z';
@@ -37,6 +46,7 @@ end = end + 'T23:59:59Z';
 // Function to determine output stream
 function getOutputStream(fileName) {
   if (fileName) {
+    fileName = fileName.endsWith('.csv') ? 'named_person_'.concat(fileName) : `named_person_${fileName}.csv`;
     console.log(`Writing to file: ${fileName}`);
     return fs.createWriteStream(fileName);
   } else {
