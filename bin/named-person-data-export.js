@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Extract data to CSV from ASL and Taskflow databases.
  * Run:  node named-person-data-export.js
