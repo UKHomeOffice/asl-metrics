@@ -33,13 +33,15 @@ const knexASL = require('knex')({
 
 const args = minimist(process.argv.slice(2));
 
+let { role, status, start, end, fileName } = args;
+
 // Read CLI arguments safely
-if (args._.length < 6) {
+if (!role || !status || !start || !end) {
   console.error('Usage: node named-person-data-export.js <role> <status> <start> <end> [fileName]');
-  console.error('Example: node named-person-data-export.js --role="pelh" --status="resolved" --start="2020-01-01" --end="2025-03-03" --fileName="pelh_resolved.csv"');
+  console.error('Example: node bin/named-person-data-export.js --role="pelh" --status="resolved" --start="2020-01-01" --end="2025-03-03" --fileName="pelh_resolved.csv"');
   process.exit(1);
 }
-let { role, status, start, end, fileName } = args;
+
 console.log(`\nQuery Parameters:
   - role: ${role}
   - status: ${status}
