@@ -1,10 +1,11 @@
 /**
  * Extract data to CSV from ASL and Taskflow databases.
- * Run:  node named-person-data-export.js "pelh" "resolved" "2020-01-01" "2025-03-03"
+ * Run:  node named-person-data-export.js "pelh" "resolved" "2020-01-01" "2025-03-03" "pelh_resolved.csv"
  * @param {string} role - Role type (e.g. 'pelh')
  * @param {string} status - Case status (e.g. 'resolved')
  * @param {string} start - Start date (e.g. '2020-01-01')
  * @param {string} end - End date (e.g. '2025-03-03')
+ * @param {string} fileName - Optional file name to save the CSV output, if not provided, it will stream to stdout.
  * @returns {CSV} - CSV file with the extracted data
  * */
 
@@ -28,10 +29,21 @@ if (process.argv.length < 6) {
   console.error('Usage: node named-person-data-export.js <role> <status> <start_date> <end_date>');
   process.exit(1);
 }
-let [role, status, start, end] = process.argv.slice(2);
+let [role, status, start, end, fileName] = process.argv.slice(2);
 
 start = start + 'T00:00:00Z';
 end = end + 'T23:59:59Z';
+
+// Function to determine output stream
+function getOutputStream(fileName) {
+  if (fileName) {
+    console.log(`Writing to file: ${fileName}`);
+    return fs.createWriteStream(fileName);
+  } else {
+    console.log('Streaming CSV to stdout...');
+    return process.stdout;
+  }
+}
 
 // Function to chunk an array into smaller chunks
 function chunkArray(array, size) {
@@ -183,6 +195,9 @@ async function mergeAndSaveCSV() {
       });
     });
 
+    // Write to file or stdout
+    const outputStream = getOutputStream(fileName);
+
     // Write the result to CSV
     const csvStream = fastCsv.format({
       headers: [
@@ -190,15 +205,12 @@ async function mergeAndSaveCSV() {
       ]
     });
 
-    const writableStream = fs.createWriteStream('merged_profiles_cases.csv');
+    csvStream.pipe(outputStream);
 
-    writableStream.on('finish', () => {
-      console.log('\nCSV file merged_profiles_cases.csv created with', result.length, 'rows');
-    });
-
-    csvStream.pipe(writableStream);
-    result.forEach(row => csvStream.write(row)); // Write each row
+    result.forEach(row => csvStream.write(row));
     csvStream.end();
+
+    console.log('\nCSV output completed.');
   } catch (error) {
     console.error('Error merging data:', error);
   } finally {
