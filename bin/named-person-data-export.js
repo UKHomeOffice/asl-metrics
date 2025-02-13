@@ -31,14 +31,20 @@ const knexASL = require('knex')({
   connection: settings.asldb
 });
 
+const args = minimist(process.argv.slice(2));
+
 // Read CLI arguments safely
-if (process.argv.length < 6) {
-  console.error('Usage: node named-person-data-export.js <role> <status> <start_date> <end_date>');
+if (args._.length < 6) {
+  console.error('Usage: node named-person-data-export.js <role> <status> <start> <end> [fileName]');
+  console.error('Example: node named-person-data-export.js --role="pelh" --status="resolved" --start="2020-01-01" --end="2025-03-03" --fileName="pelh_resolved.csv"');
   process.exit(1);
 }
-
-const args = minimist(process.argv.slice(2));
 let { role, status, start, end, fileName } = args;
+console.log(`\nQuery Parameters:
+  - role: ${role}
+  - status: ${status}
+  - start Date: ${start}
+  - end Date: ${end}\n`);
 
 start = start + 'T00:00:00Z';
 end = end + 'T23:59:59Z';
@@ -66,11 +72,7 @@ function chunkArray(array, size) {
 
 // Query DB ASL for profiles
 async function getProfiles() {
-  console.log(`\nQuery Parameters:
-  - role: ${role}
-  - status: ${status}
-  - start Date: ${start}
-  - end Date: ${end}\n`);
+
   return knexASL
     .select(
       'roles.profile_id',
