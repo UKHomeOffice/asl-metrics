@@ -1,3 +1,27 @@
+/**
+ * Script to export named person data from Taskflow DB and save it as a CSV.
+ *
+ * Usage:
+ *   node scripts/named-person-data-export.js [--startDate=YYYY-MM-DD] [--endDate=YYYY-MM-DD] [--file=output.csv]
+ *
+ * Options:
+ *   @param {string} [--startDate=YYYY-MM-DD] - (Optional) Start date for filtering cases.
+ *                                             Defaults to January 1st of the previous year.
+ *   @param {string} [--endDate=YYYY-MM-DD]   - (Optional) End date for filtering cases.
+ *                                             Defaults to December 31st of the current year.
+ *   @param {string} [--file=output.csv]      - (Optional) Name of the output CSV file.
+ *                                             Defaults to 'output-named_person.csv'.
+ *                                             If omitted, data is streamed to stdout.
+ *
+ * Example:
+ *   node scripts/named-person-data-export.js --startDate=2019-01-01 --endDate=2025-02-28 --file=output.csv
+ *
+ * Logs:
+ *   - Prints the parameters passed or defaults used.
+ *   - Outputs the number of rows written to the file.
+ *   - Displays errors along with the correct usage instructions if incorrect parameters are provided.
+ */
+
 const fs = require('fs');
 const fastCsv = require('fast-csv');
 const settings = require('../config');
@@ -20,9 +44,9 @@ const currentYear = moment().year();
 const lastYear = currentYear - 1;
 
 // Default start and end dates
-const startDate = args.startDate || `${lastYear}-01-01`; // Start date: Jan 1st of the last year
-const endDate = args.endDate || `${currentYear}-12-31`; // End date: Dec 31st of the current year
-const fileName = args.file || 'output.csv'; // Default to 'output.csv' if fileName is not provided
+const startDate = args.startDate || `${lastYear}-01-01`;
+const endDate = args.endDate || `${currentYear}-12-31`;
+const fileName = args.file;
 
 // Batch size for querying profiles
 const BATCH_SIZE = 100;
@@ -43,7 +67,7 @@ function getOutputStream(fileName) {
     return fs.createWriteStream(finalFileName); // Create a write stream to the specified file
   } else {
     console.log('Streaming CSV to stdout...');
-    return process.stdout; // Stream to the console (stdout)
+    return process.stdout;
   }
 }
 
