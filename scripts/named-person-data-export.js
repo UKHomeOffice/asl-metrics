@@ -10,8 +10,7 @@
  *   @param {string} [--endDate=YYYY-MM-DD]   - (Optional) End date for filtering cases.
  *                                             Defaults to December 31st of the current year.
  *   @param {string} [--file=output.csv]      - (Optional) Name of the output CSV file.
- *                                             Defaults to 'output-named_person.csv'.
- *                                             If omitted, data is streamed to stdout.
+ *                                             Defaults to stdout (prints to console).
  *
  * Example:
  *   node scripts/named-person-data-export.js --startDate=2019-01-01 --endDate=2025-02-28 --file=output.csv
