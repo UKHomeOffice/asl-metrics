@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Ignore any .csv file with the prefix "named_person" anywhere
-**/named_person*.csv
+**/*-named-person-data.csv
